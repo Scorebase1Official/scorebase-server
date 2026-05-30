@@ -17,6 +17,9 @@ const SPORT_MAP = {
   freeride:'freeride', xgames:'xgames'
 }
 
+// Keep server awake
+app.get('/', (req, res) => res.send('ScoreBase Server is running!'))
+
 app.get('/search', async (req, res) => {
   const { sport, competition, athlete, decade, year } = req.query
   try {
@@ -30,10 +33,10 @@ app.get('/search', async (req, res) => {
     }
     if(athlete) query = query.or('home_team.ilike.%' + athlete + '%,away_team.ilike.%' + athlete + '%')
     const { data, error } = await query
-    if(error) return res.json({ results: [] })
-    res.json({ results: data || [] })
+    if(error) return res.json([])
+    res.json(data || [])
   } catch(e) {
-    res.json({ results: [] })
+    res.json([])
   }
 })
 
